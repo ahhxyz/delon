@@ -47,6 +47,8 @@ export interface ReuseTitle {
 export interface ReuseTabCached {
   title: ReuseTitle;
 
+  groupTitle: ReuseTitle; //[ahhxyz: TAB的分组名称，可在reuse-tab组件属性中指定显示路由标题还是分组标题]
+
   url: string;
 
   /** 是否允许关闭，默认：`true` */
