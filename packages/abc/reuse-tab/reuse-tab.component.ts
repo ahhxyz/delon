@@ -173,6 +173,7 @@ export class ReuseTabComponent implements OnInit, OnChanges {
           url: item.url,
           /* =============== [ahhxyz:] =================== */
           fullUrl: this.getFullUrl(item),
+          group: item._snapshot.data.group
           /* =============== [ahhxyz:END] =================== */
           title: this.genTit(item.title),
           closable: this.allowClose && this.srv.count > 0 && this.srv.getClosable(item.url, item._snapshot),
@@ -210,6 +211,16 @@ export class ReuseTabComponent implements OnInit, OnChanges {
     if (ls.length === 1) {
       ls[0].closable = false;
     }
+
+    //[ahhxyz:]
+    /**
+     * 根据group字段对列表进行分组，同分组的所有item全部添加到items属性中，
+     * 不要对srv.items按分组进行组织，保持原样
+     * 
+     */
+    const groupList: ReuseItem[] = [];
+    
+    //[ahhxyz: END]
     this.list = ls;
     this.cdr.detectChanges();
     this.updatePos();
@@ -266,9 +277,21 @@ export class ReuseTabComponent implements OnInit, OnChanges {
     }
   }
 
-  _to(index: number, cb?: () => void): void {
+  _to(index: number|string, cb?: () => void): void {
     index = Math.max(0, Math.min(index, this.list.length - 1));
     const item = this.list[index];
+
+    //[ahhxyz:]
+    if(index.contains(':') && item.items && item.items.length > 0){
+      const activeItemIndex = index.split(':')[1];
+      item.activeItemIndex = activeItemIndex;
+      const _item = item.items[activeItemIndex];
+      item.title = _item.title;
+      item.url = _item.url;
+      item.fullUrl = _item.fullUrl;
+    }
+    //[ahhxyz: END]
+    
     //[ahhxyz:] 修改第一个传参(item.url => item.fullUrl)
     this.router.navigateByUrl(item.fullUrl).then(res => {
       if (!res) return;
