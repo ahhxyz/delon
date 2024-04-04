@@ -58,6 +58,8 @@ export interface ReuseTabCached {
   _snapshot?: ActivatedRouteSnapshot;
 
   _handle?: ReuseComponentHandle;
+
+  items: ReuseItem[]; //[ahhxyz:新增字段,该tab下的所有item]
 }
 
 export interface ReuseTabNotify {
