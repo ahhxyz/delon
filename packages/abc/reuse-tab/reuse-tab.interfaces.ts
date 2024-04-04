@@ -48,7 +48,17 @@ export interface ReuseTabCached {
   title: ReuseTitle;
 
   url: string;
+  
+  //[ahhxyz:]
+  group: string;
 
+  groupTitle: ReuseTitle; //[ahhxyz: TAB的分组名称，可在reuse-tab组件属性中指定显示路由标题还是分组标题]
+
+  activeItemIndex: number; 
+  
+  items: ReuseTabCached[]; //[ahhxyz:新增字段,该tab下的所有item]
+  //[ahhxyz: END]
+  
   /** 是否允许关闭，默认：`true` */
   closable?: boolean;
 
@@ -61,14 +71,6 @@ export interface ReuseTabCached {
 
 }
 
-export interface ReuseTabGroupCached extends ReuseTabCached {
-
-  groupTitle: ReuseTitle; //[ahhxyz: TAB的分组名称，可在reuse-tab组件属性中指定显示路由标题还是分组标题]
-
-  activeIndex: number; 
-  
-  items: ReuseTabCached[]; //[ahhxyz:新增字段,该tab下的所有item]
-}
 
 export interface ReuseTabNotify {
   /** 事件类型 */
@@ -92,7 +94,13 @@ export interface ReuseTabNotify {
 
 export interface ReuseItem {
   url: string;
+  //[ahhxyz:]
   fullUrl: string; //[ahhxyz: 新增字段]
+  group: string;
+  groupTitle: ReuseTitle; //[ahhxyz: TAB的分组名称，可在reuse-tab组件属性中指定显示路由标题还是分组标题]
+  activeItemIndex: number; 
+  items: ReuseItem[]; //[ahhxyz:新增字段,该tab下的所有item]
+  //[ahhxyz: END]
   title: string;
   closable: boolean;
   index: number;
