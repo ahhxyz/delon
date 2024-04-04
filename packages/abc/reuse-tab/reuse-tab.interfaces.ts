@@ -82,6 +82,7 @@ export interface ReuseTabNotify {
 
 export interface ReuseItem {
   url: string;
+  fullUrl: string; //[ahhxyz: 新增字段]
   title: string;
   closable: boolean;
   index: number;

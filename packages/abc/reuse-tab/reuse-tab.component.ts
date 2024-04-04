@@ -136,6 +136,9 @@ export class ReuseTabComponent implements OnInit, OnChanges {
     const snapshotTrue = this.srv.getTruthRoute(this.route.snapshot);
     return {
       url,
+      /* =============== [ahhxyz:] =================== */
+      fullUrl: this.router.url,
+      /* =============== [ahhxyz:END] =================== */
       title: this.genTit(this.srv.getTitle(url, snapshotTrue)),
       closable: this.allowClose && this.srv.count > 0 && this.srv.getClosable(url, snapshotTrue),
       active: false,
@@ -144,11 +147,33 @@ export class ReuseTabComponent implements OnInit, OnChanges {
     };
   }
 
+  /* =============== [ahhxyz:] =================== */
+  private getFullUrl(item: ReuseTabCached) {
+    let fullUrl: string = item.url;
+    const queryParams = item._snapshot.queryParams;
+    if (queryParams && Object.keys(queryParams).length) {
+      const queryString: Array<string> = [];
+      for (const queryParam in queryParams) {
+        queryString.push(encodeURIComponent(queryParam) + '=' + encodeURIComponent(queryParams[queryParam]));
+      }
+      fullUrl += '?' + queryString.join('&');
+    }
+
+    if (item._snapshot.fragment) {
+      fullUrl += '#' + item._snapshot.fragment;
+    }
+    return fullUrl;
+  }
+  /* =============== [ahhxyz:END] =================== */
+
   private genList(notify: ReuseTabNotify | null): void {
     const ls = this.srv.items.map(
       (item: ReuseTabCached, index: number) =>
         ({
           url: item.url,
+          /* =============== [ahhxyz:] =================== */
+          fullUrl: this.getFullUrl(item),
+          /* =============== [ahhxyz:END] =================== */
           title: this.genTit(item.title),
           closable: this.allowClose && this.srv.count > 0 && this.srv.getClosable(item.url, item._snapshot),
           position: item.position,
@@ -244,7 +269,8 @@ export class ReuseTabComponent implements OnInit, OnChanges {
   _to(index: number, cb?: () => void): void {
     index = Math.max(0, Math.min(index, this.list.length - 1));
     const item = this.list[index];
-    this.router.navigateByUrl(item.url).then(res => {
+    //[ahhxyz:] 修改第一个传参(item.url => item.fullUrl)
+    this.router.navigateByUrl(item.fullUrl).then(res => {
       if (!res) return;
       this.item = item;
       this.change.emit(item);
