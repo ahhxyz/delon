@@ -218,10 +218,29 @@ export class ReuseTabComponent implements OnInit, OnChanges {
      * 不要对srv.items按分组进行组织，保持原样
      * 
      */
-    const groupList: ReuseItem[] = [];
     
+    // 使用 reduce 方法和 Map 对象按 group 进行分组
+    const groupedMap = ls.reduce((acc, item) => {
+      if (!acc.has(item.group)) {
+        acc.set(item.group, {
+          ...item,
+          items: [item], // 初始化当前分组的 items 数组
+        });
+      } else {
+        acc.get(item.group).items.push(item);
+      }
+      return acc;
+    }, new Map<string, ReuseItem>());
+
+    // 将 Map 对象的值转换为数组
+    // 此时，groupedItems 就是按照 group 分组后的数组，每个元素的 items 包含了相同 group 的所有 ReuseItem
+    const groupedItems: ReuseItem[] = Array.from(groupedMap.values());
+    if(groupedItems && groupedItems.length > 0){
+      this.list = groupedItems;
+    }else{
+      this.list = ls;
+    }
     //[ahhxyz: END]
-    this.list = ls;
     this.cdr.detectChanges();
     this.updatePos();
   }
